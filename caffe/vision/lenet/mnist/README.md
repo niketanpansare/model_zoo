@@ -23,10 +23,6 @@ The MNIST dataset was constructed from two datasets of the US National Institute
 
 In the below example, we are using `mlextend` package to load the mnist dataset into Python NumPy arrays, but you are free to download it directly from http://yann.lecun.com/exdb/mnist/.
 
-```
-pip install mlextend
-```
-
 # Networks
 
 ## LeNet
@@ -34,6 +30,10 @@ pip install mlextend
 Lenet is a simple convolutional neural network, proposed by Yann LeCun in 1998. It has 2 convolutions/pooling and fully connected layer. Similar to Caffe, the network has been modified to add dropout. For more detail, please see http://yann.lecun.com/exdb/lenet/
 
 # Example
+
+  1. Install mlextend: `pip install mlextend`
+  2. Download nn library and SystemML.jar  in the current directory. (This step will not be required when PR is merged and you install SystemML through pip)
+  3. Invoke pyspark shell: `pyspark --master local[*] --driver-class-path SystemML.jar`
 
 ```python
 # Download the MNIST dataset
