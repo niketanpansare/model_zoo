@@ -21,7 +21,7 @@ limitations under the License.
 
 The MNIST dataset was constructed from two datasets of the US National Institute of Standards and Technology (NIST). The training set consists of handwritten digits from 250 different people, 50 percent high school students, and 50 percent employees from the Census Bureau. Note that the test set contains handwritten digits from different people following the same split.
 
-In the below example, we are using `mlextend` package to load the mnist dataset into Python NumPy arrays, but you are free to download it directly from http://yann.lecun.com/exdb/mnist/.
+In the below example, we are using `mlxtend` package to load the mnist dataset into Python NumPy arrays, but you are free to download it directly from http://yann.lecun.com/exdb/mnist/.
 
 # Networks
 
@@ -31,7 +31,7 @@ Lenet is a simple convolutional neural network, proposed by Yann LeCun in 1998. 
 
 # Example
 
-  1. Install mlextend: `pip install mlextend`
+  1. Install mlextend: `pip install mlxtend`
   2. Download nn library and SystemML.jar  in the current directory. (This step will not be required when PR is merged and you install SystemML through pip)
   3. Invoke pyspark shell: `pyspark --master local[*] --driver-class-path SystemML.jar`
 
@@ -60,6 +60,7 @@ barista.fit(X, y)
 
 # References
 
-  1. Y. LeCun and C. Cortes. Mnist handwritten digit database. AT&T Labs [Online]. Available: http://yann. lecun. com/exdb/mnist, 2010.
-  2. http://yann.lecun.com/exdb/mnist/
+  1. Y. LeCun and C. Cortes. Mnist handwritten digit database. AT&T Labs [Online]. Available: http://yann.lecun.com/exdb/mnist, 2010.
+  2. http://yann.lecun.com/exdb/lenet/
   3. https://github.com/BVLC/caffe/tree/master/examples/mnist
+  4. http://rasbt.github.io/mlxtend/user_guide/data/mnist_data/
