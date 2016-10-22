@@ -42,20 +42,29 @@ import numpy as np
 from sklearn.utils import shuffle
 X, y = mnist_data()
 X, y = shuffle(X, y)
-numClasses = np.unique(y).shape[0]
-imgShape = (1, 28, 28)
+num_classes = np.unique(y).shape[0]
+img_shape = (1, 28, 28)
+
+# Split the data into training and test
+n_samples = len(X)
+X_train = X[:.9 * n_samples]
+y_train = y[:.9 * n_samples]
+X_test = X[.9 * n_samples:]
+y_test = y[.9 * n_samples:]
+
 
 # Download the Lenet network
 import urllib
 urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/lenet/mnist/lenet.proto', 'lenet.proto')
 urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/lenet/mnist/lenet_solver.proto', 'lenet_solver.proto')
 
-# Train Lenet On MNIST
+# Train Lenet On MNIST using scikit-learn like API
 from systemml.mllearn import Barista
 from pyspark.sql import SQLContext
-sqlCtx = SQLContext(sc)
-barista = Barista(sqlCtx, numClasses, 'lenet_solver.proto', 'lenet.proto', imgShape)
-barista.fit(X, y)
+sql_ctx = SQLContext(sc)
+max_iter = 500
+lenet = Barista(sql_ctx, num_classes, 'lenet_solver.proto', 'lenet.proto', img_shape, max_iter)
+print('Lenet score: %f' % lenet.fit(X_train, y_train).score(X_test, y_test))
 ```
 
 # References
