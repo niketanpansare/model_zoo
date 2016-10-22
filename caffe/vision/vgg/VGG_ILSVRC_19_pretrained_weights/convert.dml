@@ -1,0 +1,3 @@
+X = read($1, format="csv")
+print($2 + " " + nrow(X) + " " + ncol(X) + " " + sum(X != 0))
+write(X, $2, format="binary")
