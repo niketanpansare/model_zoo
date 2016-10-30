@@ -23,6 +23,8 @@ If you plan to use the network or the model, please cite "K. Simonyan, A. Zisser
 
 ## VGG 19-layer model
 
+![VGG 19-layer network](VGG_ILSVRC_19_layers_network.png)
+
 ### Example
 
   1. Install packages used in the below example: `pip install Pillow`

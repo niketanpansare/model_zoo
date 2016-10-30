@@ -23,6 +23,8 @@ If you plan to use the network or the model, please cite "Kaiming He and Xiangyu
 
 ## ResNet 50 model
 
+![ResNet 50 network](ResNet_50_network.png)
+
 ### Example
 
   1. Install packages used in the below example: `pip install Pillow`
