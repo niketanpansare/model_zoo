@@ -29,6 +29,8 @@ In the below example, we are using `mlxtend` package to load the mnist dataset i
 
 Lenet is a simple convolutional neural network, proposed by Yann LeCun in 1998. It has 2 convolutions/pooling and fully connected layer. Similar to Caffe, the network has been modified to add dropout. For more detail, please see http://yann.lecun.com/exdb/lenet/
 
+![Lenet network](lenet_network.png)
+
 # Example
 
   1. Install mlextend: `pip install mlxtend`
