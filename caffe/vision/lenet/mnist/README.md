@@ -49,10 +49,10 @@ img_shape = (1, 28, 28)
 
 # Split the data into training and test
 n_samples = len(X)
-X_train = X[:.9 * n_samples]
-y_train = y[:.9 * n_samples]
-X_test = X[.9 * n_samples:]
-y_test = y[.9 * n_samples:]
+X_train = X[:int(.9 * n_samples)]
+y_train = y[:int(.9 * n_samples)]
+X_test = X[int(.9 * n_samples):]
+y_test = y[int(.9 * n_samples):]
 
 
 # Download the Lenet network
