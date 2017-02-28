@@ -37,26 +37,21 @@ from pyspark.sql import SQLContext
 import numpy as np
 import urllib, os, scipy.ndimage
 from PIL import Image
+import systemml as sml
 
 # ImageNet specific parameters
 img_shape = (3, 224, 224)
 num_classes = 1000
 
-# Utility method that downloads a jpg image, resizes it to 224 and return as numpy array in N X CHW format
-def downloadAsNumPyArray(url):
-    outFile = 'test.jpg'
-    urllib.urlretrieve(url, outFile + '.tmp')
-    Image.open(outFile + '.tmp').resize( (224,224), Image.LANCZOS).save(outFile)
-    os.remove(outFile + '.tmp')
-    t = np.einsum('ijk->kij', scipy.ndimage.imread(outFile))
-    return t.reshape(1, t.size)
+# Downloads a jpg image, resizes it to 224 and return as numpy array in N X CHW format
+url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/MountainLion.jpg/312px-MountainLion.jpg'
+outFile = 'test.jpg'
+urllib.urlretrieve(url, outFile)
+input_image = sml.convertImageToNumPyArr(Image.open(outFile), img_shape=img_shape)
 
-
-input_image = downloadAsNumPyArray('https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/MountainLion.jpg/312px-MountainLion.jpg')
-assert input_image.shape == (1, img_shape[0]*img_shape[1]*img_shape[2])
-
-vgg_dir = '< path to model_zoo/caffe/vision/vgg/ilsvrc12>'
+# Load the pretrained model and predict the downloaded image
 sql_ctx = SQLContext(sc)
+vgg_dir = '< path to model_zoo/caffe/vision/vgg/ilsvrc12>'
 vgg = Barista(sql_ctx, num_classes, os.path.join(vgg_dir, 'VGG_ILSVRC_19_layers_solver.proto'), os.path.join(vgg_dir, 'VGG_ILSVRC_19_layers_network.proto'), img_shape)
 vgg.load(os.path.join(vgg_dir, 'VGG_ILSVRC_19_pretrained_weights'))
 vgg.predict(input_image)
