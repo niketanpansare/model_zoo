@@ -41,7 +41,6 @@ import systemml as sml
 
 # ImageNet specific parameters
 img_shape = (3, 224, 224)
-num_classes = 1000
 
 # Downloads a jpg image, resizes it to 224 and return as numpy array in N X CHW format
 url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/MountainLion.jpg/312px-MountainLion.jpg'
@@ -49,10 +48,11 @@ outFile = 'test.jpg'
 urllib.urlretrieve(url, outFile)
 input_image = sml.convertImageToNumPyArr(Image.open(outFile), img_shape=img_shape)
 
-# Load the pretrained model and predict the downloaded image
-sql_ctx = SQLContext(sc)
-resnet_dir = '< path to model_zoo/caffe/vision/resnet/ilsvrc12>'
-resnet = Barista(sql_ctx, num_classes, os.path.join(resnet_dir, 'ResNet_50_solver.proto'), os.path.join(resnet_dir, 'ResNet_50_network.proto'), img_shape)
-resnet.load(os.path.join(resnet_dir, 'ResNet_50_pretrained_weights'))
+# Download the ResNet network
+import urllib
+urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/resnet/ilsvrc12/ResNet_50_network.proto', 'ResNet_50_network.proto')
+urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/resnet/ilsvrc12/ResNet_50_solver.proto', 'ResNet_50_solver.proto')
+
+resnet = Barista(sqlCtx, solver='ResNet_50_solver.proto', weights='/home/biuser/model_zoo/caffe/vision/resnet/ilsvrc12/ResNet_50_pretrained_weights').set(input_shape=img_shape)
 resnet.predict(input_image)
 ```

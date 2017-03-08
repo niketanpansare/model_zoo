@@ -54,7 +54,6 @@ y_train = y[:int(.9 * n_samples)]
 X_test = X[int(.9 * n_samples):]
 y_test = y[int(.9 * n_samples):]
 
-
 # Download the Lenet network
 import urllib
 urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/lenet/mnist/lenet.proto', 'lenet.proto')
@@ -62,11 +61,20 @@ urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/m
 
 # Train Lenet On MNIST using scikit-learn like API
 from systemml.mllearn import Barista
-from pyspark.sql import SQLContext
-sql_ctx = SQLContext(sc)
-max_iter = 500
-lenet = Barista(sql_ctx, num_classes, 'lenet_solver.proto', 'lenet.proto', img_shape, max_iter)
+lenet = Barista(sqlCtx, solver='lenet_solver.proto').set(max_iter=500, debug=True)
 print('Lenet score: %f' % lenet.fit(X_train, y_train).score(X_test, y_test))
+
+# Save the trained
+lenet.save('lenet_model')
+
+# Fine-tune the existing trained model
+new_lenet = Barista(sqlCtx, solver='lenet_solver.proto', weights='lenet_model').set(max_iter=500, debug=True)
+new_lenet.fit(X_train, y_train)
+new_lenet.save('lenet_model')
+
+# Use the new model for prediction
+predict_lenet = Barista(sqlCtx, solver='lenet_solver.proto', weights='lenet_model')
+print('Lenet score: %f' % predict_lenet.score(X_test, y_test))
 ```
 
 # References
