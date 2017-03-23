@@ -32,7 +32,7 @@ If you plan to use the network or the model, please cite "Kaiming He and Xiangyu
   3. Start pyspark shell: `pyspark --master local[*] --driver-memory 5g  --driver-class-path SystemML.jar`
 
 ```python
-from systemml.mllearn import Barista
+from systemml.mllearn import Caffe2DML
 from pyspark.sql import SQLContext
 import numpy as np
 import urllib, os, scipy.ndimage
@@ -53,6 +53,6 @@ import urllib
 urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/resnet/ilsvrc12/ResNet_50_network.proto', 'ResNet_50_network.proto')
 urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/resnet/ilsvrc12/ResNet_50_solver.proto', 'ResNet_50_solver.proto')
 
-resnet = Barista(sqlCtx, solver='ResNet_50_solver.proto', weights='/home/biuser/model_zoo/caffe/vision/resnet/ilsvrc12/ResNet_50_pretrained_weights').set(input_shape=img_shape)
+resnet = Caffe2DML(sqlCtx, solver='ResNet_50_solver.proto', weights='/home/biuser/model_zoo/caffe/vision/resnet/ilsvrc12/ResNet_50_pretrained_weights').set(input_shape=img_shape)
 resnet.predict(input_image)
 ```

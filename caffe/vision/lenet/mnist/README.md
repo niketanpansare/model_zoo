@@ -37,6 +37,10 @@ Lenet is a simple convolutional neural network, proposed by Yann LeCun in 1998. 
   2. Download nn library and SystemML.jar  in the current directory. (This step will not be required when PR is merged and you install SystemML through pip)
   3. Invoke pyspark shell: `pyspark --master local[*] --driver-class-path SystemML.jar`
 
+## Training using Caffe models on Lenet
+
+The below script also demonstrates how to save the trained model.
+
 ```python
 # Download the MNIST dataset
 from mlxtend.data import mnist_data
@@ -60,20 +64,28 @@ urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/m
 urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/lenet/mnist/lenet_solver.proto', 'lenet_solver.proto')
 
 # Train Lenet On MNIST using scikit-learn like API
-from systemml.mllearn import Barista
-lenet = Barista(sqlCtx, solver='lenet_solver.proto').set(max_iter=500, debug=True)
+from systemml.mllearn import Caffe2DML
+lenet = Caffe2DML(sqlCtx, solver='lenet_solver.proto').set(max_iter=500, debug=True).setStatistics(True)
 print('Lenet score: %f' % lenet.fit(X_train, y_train).score(X_test, y_test))
 
-# Save the trained
+# Save the trained model
 lenet.save('lenet_model')
+```
 
+## Load the trained model and retrain (i.e. finetuning)
+
+```python
 # Fine-tune the existing trained model
-new_lenet = Barista(sqlCtx, solver='lenet_solver.proto', weights='lenet_model').set(max_iter=500, debug=True)
+new_lenet = Caffe2DML(sqlCtx, solver='lenet_solver.proto', weights='lenet_model').set(max_iter=500, debug=True)
 new_lenet.fit(X_train, y_train)
 new_lenet.save('lenet_model')
+```
 
+## Perform prediction using the above trained model
+
+```python
 # Use the new model for prediction
-predict_lenet = Barista(sqlCtx, solver='lenet_solver.proto', weights='lenet_model')
+predict_lenet = Caffe2DML(sqlCtx, solver='lenet_solver.proto', weights='lenet_model')
 print('Lenet score: %f' % predict_lenet.score(X_test, y_test))
 ```
 

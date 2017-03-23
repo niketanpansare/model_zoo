@@ -32,7 +32,7 @@ If you plan to use the network or the model, please cite "K. Simonyan, A. Zisser
   3. Start pyspark shell: `pyspark --master local[*] --driver-memory 5g  --driver-class-path SystemML.jar`
 
 ```python
-from systemml.mllearn import Barista
+from systemml.mllearn import Caffe2DML
 from pyspark.sql import SQLContext
 import numpy as np
 import urllib, os, scipy.ndimage
@@ -52,7 +52,7 @@ input_image = sml.convertImageToNumPyArr(Image.open(outFile), img_shape=img_shap
 # Load the pretrained model and predict the downloaded image
 sql_ctx = SQLContext(sc)
 vgg_dir = '< path to model_zoo/caffe/vision/vgg/ilsvrc12>'
-vgg = Barista(sql_ctx, num_classes, os.path.join(vgg_dir, 'VGG_ILSVRC_19_layers_solver.proto'), os.path.join(vgg_dir, 'VGG_ILSVRC_19_layers_network.proto'), img_shape)
+vgg = Caffe2DML(sql_ctx, num_classes, os.path.join(vgg_dir, 'VGG_ILSVRC_19_layers_solver.proto'), os.path.join(vgg_dir, 'VGG_ILSVRC_19_layers_network.proto'), img_shape)
 vgg.load(os.path.join(vgg_dir, 'VGG_ILSVRC_19_pretrained_weights'))
 vgg.predict(input_image)
 ```
