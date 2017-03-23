@@ -410,7 +410,7 @@ layer {
   name: "fc6"
   type: "InnerProduct"
   inner_product_param {
-    num_output: 4096
+    num_output: 256
   }
 }
 layer {
@@ -434,7 +434,7 @@ layer {
   name: "fc7"
   type: "InnerProduct"
   inner_product_param {
-    num_output: 4096
+    num_output: 256
   }
 }
 layer {
@@ -458,7 +458,7 @@ layer {
   name: "fc8"
   type: "InnerProduct"
   inner_product_param {
-    num_output: 1000
+    num_output: 2
   }
 }
 layer {

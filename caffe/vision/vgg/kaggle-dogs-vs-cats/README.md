@@ -29,7 +29,10 @@ If you plan to use the network or the model, please cite "K. Simonyan, A. Zisser
 
   1. Install packages used in the below example: `pip install Pillow`
   2. Download the trained model and network: `git clone https://github.com/niketanpansare/model_zoo.git`
-  3. Start pyspark shell: `pyspark --master local[*] --driver-memory 5g  --driver-class-path SystemML.jar`
+  3. Start pyspark shell: `pyspark --master local[*] --driver-memory 20g  --driver-class-path SystemML.jar`
+  4. Download train.zip from https://www.kaggle.com/c/dogs-vs-cats/data
+  5. Freeze weight and bias of convolution layer by adding `param { lr_mult: 0 }`
+  6. Modify `num_output` of last `InnerProduct` layers in the network proto from 4096, 4096, 1000 to 256, 256, 2 respectively. 
 
 ```python
 from systemml.mllearn import Caffe2DML
