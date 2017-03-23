@@ -27,6 +27,8 @@ If you plan to use the network or the model, please cite "K. Simonyan, A. Zisser
 
 ### Example
 
+This example demonstrates transfer learning using pre-trained VGG model and is based on [the Francis Chollet's tutorial](https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html).
+
   1. Install packages used in the below example: `pip install Pillow`
   2. Download the trained model and network: `git clone https://github.com/niketanpansare/model_zoo.git`
   3. Start pyspark shell: `pyspark --master local[*] --driver-memory 20g  --driver-class-path SystemML.jar`
@@ -35,27 +37,5 @@ If you plan to use the network or the model, please cite "K. Simonyan, A. Zisser
   6. Modify `num_output` of last `InnerProduct` layers in the network proto from 4096, 4096, 1000 to 256, 256, 2 respectively. 
 
 ```python
-from systemml.mllearn import Caffe2DML
-from pyspark.sql import SQLContext
-import numpy as np
-import urllib, os, scipy.ndimage
-from PIL import Image
-import systemml as sml
-
-# ImageNet specific parameters
-img_shape = (3, 224, 224)
-num_classes = 1000
-
-# Downloads a jpg image, resizes it to 224 and return as numpy array in N X CHW format
-url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/MountainLion.jpg/312px-MountainLion.jpg'
-outFile = 'test.jpg'
-urllib.urlretrieve(url, outFile)
-input_image = sml.convertImageToNumPyArr(Image.open(outFile), img_shape=img_shape)
-
-# Load the pretrained model and predict the downloaded image
-sql_ctx = SQLContext(sc)
-vgg_dir = '< path to model_zoo/caffe/vision/vgg/ilsvrc12>'
-vgg = Caffe2DML(sql_ctx, num_classes, os.path.join(vgg_dir, 'VGG_ILSVRC_19_layers_solver.proto'), os.path.join(vgg_dir, 'VGG_ILSVRC_19_layers_network.proto'), img_shape)
-vgg.load(os.path.join(vgg_dir, 'VGG_ILSVRC_19_pretrained_weights'))
-vgg.predict(input_image)
+TODO:
 ```
