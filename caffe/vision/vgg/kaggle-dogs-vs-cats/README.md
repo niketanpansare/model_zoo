@@ -36,6 +36,55 @@ This example demonstrates transfer learning using pre-trained VGG model and is b
   5. Freeze weight and bias of convolution layer by adding `param { lr_mult: 0 }`
   6. Modify `num_output` of last `InnerProduct` layers in the network proto from 4096, 4096, 1000 to 256, 256, 2 respectively. 
 
+#### Preprocessing the dataset
 ```python
-TODO:
+from systemml.mllearn import Caffe2DML
+from pyspark.sql import SQLContext
+import numpy as np
+import urllib, os, scipy.ndimage
+from pyspark.ml.linalg import Vectors
+from pyspark import StorageLevel
+import systemml as sml
+from pyspark.sql.functions import rand 
+# ImageNet specific parameters
+img_shape = (3, 224, 224)
+train_dir = '/home/biuser/dogs_vs_cats/train'
+def getLabelFeatures(filename):
+	from PIL import Image
+	vec = Vectors.dense(sml.convertImageToNumPyArr(Image.open(os.path.join(train_dir, filename)), img_shape=img_shape)[0,:])
+	if filename.lower().startswith('cat'):
+		return (1, vec)
+	elif filename.lower().startswith('dog'):
+		return (2, vec)
+	else:
+		raise ValueError('Expected the filename to start with either cat or dog')
+
+list_jpeg_files = os.listdir(train_dir)
+# 10 files per partition
+train_df = sc.parallelize(list_jpeg_files, int(len(list_jpeg_files)/10)).map(lambda filename : getLabelFeatures(filename)).toDF(['label', 'features']).orderBy(rand())
+# Optional: but helps seperates conversion-related from training
+train_df.write.parquet('kaggle-cats-dogs.parquet')
+```
+
+#### Fine-tuning
+
+```python
+from systemml.mllearn import Caffe2DML
+from pyspark.sql import SQLContext
+import numpy as np
+import urllib, os, scipy.ndimage
+import systemml as sml
+# ImageNet specific parameters
+img_shape = (3, 224, 224)
+train_df = sqlCtx.read.parquet('kaggle-cats-dogs.parquet')
+
+# Download the Proto files
+import urllib
+urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/vgg/kaggle-dogs-vs-cats/VGG_ILSVRC_19_layers_network.proto', 'VGG_ILSVRC_19_layers_network.proto')
+urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/vgg/kaggle-dogs-vs-cats/VGG_ILSVRC_19_layers_solver.proto', 'VGG_ILSVRC_19_layers_solver.proto')
+
+# Train
+vgg = Caffe2DML(sqlCtx, solver='VGG_ILSVRC_19_layers_solver.proto', weights='/home/biuser/model_zoo/caffe/vision/vgg/ilsvrc12/VGG_ILSVRC_19_pretrained_weights', ignore_weights=['fc6', 'fc7', 'fc8']).set(input_shape=img_shape, debug=True, max_iter=500).setExplain(True)
+vgg.fit(train_df)
+vgg.save('kaggle-cats-dogs-model')
 ```
