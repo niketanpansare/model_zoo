@@ -31,7 +31,7 @@ This example demonstrates transfer learning using pre-trained VGG model and is b
 
   1. Install packages used in the below example: `pip install Pillow`
   2. Download the trained model and network: `git clone https://github.com/niketanpansare/model_zoo.git`
-  3. Start pyspark shell: `pyspark --master local[*] --driver-memory 20g  --driver-class-path SystemML.jar`
+  3. Start pyspark shell: `pyspark --master local[*] --driver-memory 20g  --driver-class-path SystemML.jar --conf spark.driver.maxResultSize=0`
   4. Download train.zip from https://www.kaggle.com/c/dogs-vs-cats/data
   5. Freeze weight and bias of convolution layer by adding `param { lr_mult: 0 }`
   6. Modify `num_output` of last `InnerProduct` layers in the network proto from 4096, 4096, 1000 to 256, 256, 2 respectively. 
@@ -84,7 +84,7 @@ urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/m
 urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/vgg/kaggle-dogs-vs-cats/VGG_ILSVRC_19_layers_solver.proto', 'VGG_ILSVRC_19_layers_solver.proto')
 
 # Train
-vgg = Caffe2DML(sqlCtx, solver='VGG_ILSVRC_19_layers_solver.proto', weights='/home/biuser/model_zoo/caffe/vision/vgg/ilsvrc12/VGG_ILSVRC_19_pretrained_weights', ignore_weights=['fc6', 'fc7', 'fc8']).set(input_shape=img_shape, debug=True, max_iter=500).setExplain(True)
+vgg = Caffe2DML(sqlCtx, solver='VGG_ILSVRC_19_layers_solver.proto', weights='/home/biuser/model_zoo/caffe/vision/vgg/ilsvrc12/VGG_ILSVRC_19_pretrained_weights', ignore_weights=['fc6', 'fc7', 'fc8']).set(input_shape=img_shape, debug=True, max_iter=500, validation_split=0.005).setStatistics(True).setGPU(True)
 vgg.fit(train_df)
 vgg.save('kaggle-cats-dogs-model')
 ```
