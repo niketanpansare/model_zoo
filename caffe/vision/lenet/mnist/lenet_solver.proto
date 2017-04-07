@@ -12,3 +12,8 @@ display: 100
 # solver mode: CPU or GPU
 solver_mode: CPU
 type: "SGD"
+# The maximum number of iterations
+max_iter: 2000
+# Carry out testing every 500 training iterations.
+test_iter: 100
+test_interval: 500

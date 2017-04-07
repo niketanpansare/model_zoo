@@ -65,7 +65,7 @@ urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/m
 
 # Train Lenet On MNIST using scikit-learn like API
 from systemml.mllearn import Caffe2DML
-lenet = Caffe2DML(sqlCtx, solver='lenet_solver.proto').set(max_iter=500, debug=True).setStatistics(True)
+lenet = Caffe2DML(sqlCtx, solver='lenet_solver.proto').set(debug=True).setStatistics(True)
 print('Lenet score: %f' % lenet.fit(X_train, y_train).score(X_test, y_test))
 
 # Save the trained model
@@ -76,7 +76,7 @@ lenet.save('lenet_model')
 
 ```python
 # Fine-tune the existing trained model
-new_lenet = Caffe2DML(sqlCtx, solver='lenet_solver.proto', weights='lenet_model').set(max_iter=500, debug=True)
+new_lenet = Caffe2DML(sqlCtx, solver='lenet_solver.proto', weights='lenet_model').set(debug=True)
 new_lenet.fit(X_train, y_train)
 new_lenet.save('lenet_model')
 ```
