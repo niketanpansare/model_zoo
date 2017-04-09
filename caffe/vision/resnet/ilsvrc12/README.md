@@ -28,8 +28,8 @@ If you plan to use the network or the model, please cite "Kaiming He and Xiangyu
 ### Example
 
   1. Install packages used in the below example: `pip install Pillow`
-  2. Download the trained model and network: `git clone https://github.com/niketanpansare/model_zoo.git`
-  3. Start pyspark shell: `pyspark --master local[*] --driver-memory 5g  --driver-class-path SystemML.jar`
+  2. Download the trained model and network in your home directory: `git clone https://github.com/niketanpansare/model_zoo.git`
+  3. Start pyspark shell: `pyspark --driver-memory 2G --conf spark.driver.maxResultSize=0 --conf "spark.driver.extraJavaOptions=-Xmn200m -server" --driver-class-path SystemML.jar`
 
 ```python
 from systemml.mllearn import Caffe2DML
@@ -53,6 +53,6 @@ import urllib
 urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/resnet/ilsvrc12/ResNet_50_network.proto', 'ResNet_50_network.proto')
 urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/resnet/ilsvrc12/ResNet_50_solver.proto', 'ResNet_50_solver.proto')
 
-resnet = Caffe2DML(sqlCtx, solver='ResNet_50_solver.proto', weights='/home/biuser/model_zoo/caffe/vision/resnet/ilsvrc12/ResNet_50_pretrained_weights').set(input_shape=img_shape)
+resnet = Caffe2DML(sqlCtx, solver='ResNet_50_solver.proto', weights='~/model_zoo/caffe/vision/resnet/ilsvrc12/ResNet_50_pretrained_weights', input_shape=img_shape)
 resnet.predict(input_image)
 ```
