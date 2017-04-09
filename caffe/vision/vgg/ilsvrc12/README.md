@@ -29,7 +29,7 @@ If you plan to use the network or the model, please cite "K. Simonyan, A. Zisser
 
   1. Install packages used in the below example: `pip install Pillow`
   2. Download the trained model and network: `git clone https://github.com/niketanpansare/model_zoo.git`
-  3. Start pyspark shell: `pyspark --master local[*] --driver-memory 5g  --driver-class-path SystemML.jar`
+  3. Start pyspark shell: `pyspark --driver-memory 5G --conf spark.driver.maxResultSize=0 --conf "spark.driver.extraJavaOptions=-Xmn500m -server" --driver-class-path SystemML.jar`
 
 ```python
 from systemml.mllearn import Caffe2DML
@@ -49,10 +49,13 @@ outFile = 'test.jpg'
 urllib.urlretrieve(url, outFile)
 input_image = sml.convertImageToNumPyArr(Image.open(outFile), img_shape=img_shape)
 
+# Download the VGG network
+urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/vgg/ilsvrc12/VGG_ILSVRC_19_layers_solver.proto', 'VGG_ILSVRC_19_layers_solver.proto')
+urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/vgg/ilsvrc12/VGG_ILSVRC_19_layers_network.proto', 'VGG_ILSVRC_19_layers_network.proto')
+
 # Load the pretrained model and predict the downloaded image
-sql_ctx = SQLContext(sc)
-vgg_dir = '< path to model_zoo/caffe/vision/vgg/ilsvrc12>'
-vgg = Caffe2DML(sql_ctx, num_classes, os.path.join(vgg_dir, 'VGG_ILSVRC_19_layers_solver.proto'), os.path.join(vgg_dir, 'VGG_ILSVRC_19_layers_network.proto'), img_shape)
-vgg.load(os.path.join(vgg_dir, 'VGG_ILSVRC_19_pretrained_weights'))
+home_dir = os.path.expanduser('~')
+vgg_pretrained_weight_dir = os.path.join(home_dir, 'model_zoo', 'caffe', 'vision', 'vgg', 'ilsvrc12', 'VGG_ILSVRC_19_pretrained_weights')
+vgg = Caffe2DML(sqlCtx, solver='VGG_ILSVRC_19_layers_solver.proto', weights=vgg_pretrained_weight_dir, input_shape=img_shape)
 vgg.predict(input_image)
 ```
