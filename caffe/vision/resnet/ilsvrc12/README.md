@@ -53,6 +53,8 @@ import urllib
 urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/resnet/ilsvrc12/ResNet_50_network.proto', 'ResNet_50_network.proto')
 urllib.urlretrieve('https://raw.githubusercontent.com/niketanpansare/model_zoo/master/caffe/vision/resnet/ilsvrc12/ResNet_50_solver.proto', 'ResNet_50_solver.proto')
 
-resnet = Caffe2DML(sqlCtx, solver='ResNet_50_solver.proto', weights='~/model_zoo/caffe/vision/resnet/ilsvrc12/ResNet_50_pretrained_weights', input_shape=img_shape)
+home_dir = os.path.expanduser('~')
+resnet_pretrained_weight_dir = os.path.join(home_dir, 'model_zoo', 'caffe', 'vision', 'resnet', 'ilsvrc12', 'ResNet_50_pretrained_weights')
+resnet = Caffe2DML(sqlCtx, solver='ResNet_50_solver.proto', weights=resnet_pretrained_weight_dir, input_shape=img_shape)
 resnet.predict(input_image)
 ```
