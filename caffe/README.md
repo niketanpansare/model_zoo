@@ -40,7 +40,7 @@ conversion_utils.save_lmdb('../examples/mnist/mnist_train_lmdb', os.path.join(ho
 
 1. Create a directory `~/vgg_weights`.
 
-2. Use Caffe's python API to save the weights and bias in `VGG_ILSVRC_19_layers.caffemodel` into  `~/vgg_weights`. The `VGG_ILSVRC_19_layers_deploy.prototxt` describes the Network.
+2. Use Caffe's Python API to save the weights and biases specified in `VGG_ILSVRC_19_layers.caffemodel` into the `~/vgg_weights` directory. The `VGG_ILSVRC_19_layers_deploy.prototxt` describes the network.
 
 ```python
 import conversion_utils, os
@@ -49,7 +49,7 @@ vgg_pretrained_weight_dir = os.path.join(home_dir, 'vgg_weights')
 conversion_utils.convert_caffemodel('/home/biuser/VGG_trained_models/VGG_ILSVRC_19_layers_deploy.prototxt', '/home/biuser/VGG_trained_models/VGG_ILSVRC_19_layers.caffemodel', vgg_pretrained_weight_dir)
 ```
 
-3. Copy `labels.txt` containing the labels with its associated IDs. For ImageNet dataset, please use [labels.txt](https://github.com/niketanpansare/model_zoo/blob/master/caffe/vision/vgg/ilsvrc12/VGG_ILSVRC_19_pretrained_weights/labels.txt)
+3. Copy `labels.txt` (that maps the labels with one-based IDs) into the directory `~/vgg_weights`. For ImageNet dataset, please use [labels.txt](https://github.com/niketanpansare/model_zoo/blob/master/caffe/vision/vgg/ilsvrc12/VGG_ILSVRC_19_pretrained_weights/labels.txt):
 
 ```bash
 1,"tench, Tinca tinca"
