@@ -27,7 +27,7 @@ Caffe is a deep learning framework made with expression, speed, and modularity i
   2. See http://caffe.berkeleyvision.org/tutorial/ for creating custom network file.
   3. An online GUI tool used to visualize prototxt and generate prototxt for caffe: http://yanglei.me/gen_proto/ (Source code: https://github.com/yl-1993/GenProto/tree/structured)
 
-# Converting lmdb files to jpeg
+# LMDB to JPEG conversion
 
 ```python
 # mkdir ~/mnist_output
@@ -36,7 +36,7 @@ home_dir = os.path.expanduser('~')
 conversion_utils.save_lmdb('../examples/mnist/mnist_train_lmdb', os.path.join(home_dir, 'mnist_output'), os.path.join(home_dir, 'mnist_label.txt'))
 ```
 
-# Converting pretrained caffe model (.caffemodel) to the format supported by SystemML (for example: csv)
+# Caffemodel to CSV conversion
 
 1. Create a directory `~/vgg_weights`.
 
